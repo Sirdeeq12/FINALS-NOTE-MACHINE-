@@ -112,10 +112,10 @@ export function ContractNoteTable({ trades, clientName, accountNumber }: Contrac
                   <td className="border-2 border-black px-4 py-2 text-sm text-gray-900">
                     {trade.type}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2 text-sm text-gray-900 text-right font-mono">
+                  <td className="border-2 border-black px-4 py-2 text-sm text-gray-900 text-right font-mono">
                     {formatPrice(trade.price)}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2 text-sm text-gray-900 text-right font-mono">
+                  <td className="border-2 border-black px-4 py-2 text-sm text-gray-900 text-right font-mono">
                     {formatUnits(trade.units)}
                   </td>
                   <td className="border-2 border-black px-4 py-2 text-sm text-gray-900">
