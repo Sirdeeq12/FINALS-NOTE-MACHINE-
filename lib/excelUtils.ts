@@ -207,6 +207,11 @@ export function aggregateBySecurityAndPrice(trades: TradeRecord[]): AggregatedTr
 /**
  * Format aggregated trades as TSV (tab-separated values)
  * includeTitle: if true, prepends "{clientName} - {accountNumber}\n\n" to the output
+ *
+ * This is the plain-text fallback used when the paste target cannot accept
+ * rich HTML. Values are formatted (commas, 4dp price, whole-number units) so
+ * the plain-text paste matches the on-screen display; Excel still parses these
+ * as numbers.
  */
 export function formatAsTSV(
   trades: AggregatedTrade[],
@@ -224,26 +229,89 @@ export function formatAsTSV(
   // Header row
   rows.push('TYPE\tPRICE\tUNITS\tSECURITY');
 
-  // Data rows with raw numeric values
+  // Data rows with formatted values (comma thousands separators)
   for (const trade of trades) {
-    const rawPrice = trade.price.toString();
-    const rawUnits = Math.round(trade.units);
-    rows.push(`${trade.type}\t${rawPrice}\t${rawUnits}\t${trade.security}`);
+    rows.push(`${trade.type}\t${formatPrice(trade.price)}\t${formatUnits(trade.units)}\t${trade.security}`);
   }
 
   return rows.join('\n');
 }
 
 /**
- * Format price for display: 4 decimal places
+ * Escape a value for safe inclusion in HTML.
  */
-export function formatPrice(price: number): string {
-  return price.toFixed(4);
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 /**
- * Format units for display: thousands separator + 1 decimal place
+ * Format aggregated trades as an HTML table with solid black borders.
+ *
+ * Pasting plain TSV drops all formatting, so tables land in Google Docs / email
+ * bodies with no visible borders. Putting this HTML on the clipboard (as
+ * `text/html`) makes Docs, Gmail, Word and Excel all render a bordered table.
+ * Borders are inlined on every cell (with border-collapse) because email
+ * clients strip <style> blocks and only honor inline cell borders.
+ */
+export function formatAsHTML(
+  trades: AggregatedTrade[],
+  clientName: string,
+  accountNumber: string,
+  includeTitle: boolean = false
+): string {
+  const border = 'border:1px solid #000;';
+  const cell = `${border}padding:4px 8px;`;
+  const headCell = `${cell}font-weight:bold;background:#d9d9d9;text-align:center;`;
+
+  const title = includeTitle
+    ? `<p style="font-weight:bold;text-align:center;margin:0 0 8px;">${escapeHtml(
+        `${clientName} - ${accountNumber}`
+      )}</p>`
+    : '';
+
+  const header =
+    `<tr>` +
+    `<th style="${headCell}">TYPE</th>` +
+    `<th style="${headCell}">PRICE</th>` +
+    `<th style="${headCell}">UNITS</th>` +
+    `<th style="${headCell}">SECURITY</th>` +
+    `</tr>`;
+
+  const body = trades
+    .map(
+      (trade) =>
+        `<tr>` +
+        `<td style="${cell}">${escapeHtml(trade.type)}</td>` +
+        `<td style="${cell}text-align:right;">${formatPrice(trade.price)}</td>` +
+        `<td style="${cell}text-align:right;">${formatUnits(trade.units)}</td>` +
+        `<td style="${cell}">${escapeHtml(trade.security)}</td>` +
+        `</tr>`
+    )
+    .join('');
+
+  return (
+    `${title}` +
+    `<table style="border-collapse:collapse;${border}font-family:Arial,sans-serif;font-size:13px;">` +
+    `<thead>${header}</thead>` +
+    `<tbody>${body}</tbody>` +
+    `</table>`
+  );
+}
+
+/**
+ * Format price for display: thousands separator + 4 decimal places
+ */
+export function formatPrice(price: number): string {
+  return price.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+}
+
+/**
+ * Format units (volume) for display: thousands separator, no decimals
  */
 export function formatUnits(units: number): string {
-  return units.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  return Math.round(units).toLocaleString('en-US', { maximumFractionDigits: 0 });
 }

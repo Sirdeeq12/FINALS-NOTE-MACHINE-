@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { AggregatedTrade, formatPrice, formatUnits, formatAsTSV } from '@/lib/excelUtils';
+import { AggregatedTrade, formatPrice, formatUnits, formatAsTSV, formatAsHTML } from '@/lib/excelUtils';
 
 interface ContractNoteTableProps {
   trades: AggregatedTrade[];
@@ -15,12 +15,32 @@ export function ContractNoteTable({ trades, clientName, accountNumber }: Contrac
 
   const handleCopyToExcel = async (includeTitle: boolean) => {
     const tsv = formatAsTSV(trades, clientName, accountNumber, includeTitle);
+    const html = formatAsHTML(trades, clientName, accountNumber, includeTitle);
     try {
-      await navigator.clipboard.writeText(tsv);
+      // Write both HTML (bordered table for Docs/email/Excel) and plain TSV
+      // (fallback for editors that only accept plain text).
+      if (typeof ClipboardItem !== 'undefined' && navigator.clipboard?.write) {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/html': new Blob([html], { type: 'text/html' }),
+            'text/plain': new Blob([tsv], { type: 'text/plain' }),
+          }),
+        ]);
+      } else {
+        await navigator.clipboard.writeText(tsv);
+      }
       setCopied(includeTitle ? 'title' : 'table');
       setTimeout(() => setCopied(null), 2000);
     } catch (err) {
       console.error('Failed to copy:', err);
+      // Last-resort fallback to plain text.
+      try {
+        await navigator.clipboard.writeText(tsv);
+        setCopied(includeTitle ? 'title' : 'table');
+        setTimeout(() => setCopied(null), 2000);
+      } catch (fallbackErr) {
+        console.error('Fallback copy failed:', fallbackErr);
+      }
     }
   };
 
@@ -62,7 +82,7 @@ export function ContractNoteTable({ trades, clientName, accountNumber }: Contrac
         </div>
 
         <p className="text-xs text-gray-500 text-center">
-          Paste into Excel for proper column alignment
+          Paste into Excel, Google Docs or an email body — a bordered table is included
         </p>
       </div>
 
