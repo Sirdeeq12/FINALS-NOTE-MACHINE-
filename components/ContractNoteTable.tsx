@@ -89,19 +89,22 @@ export function ContractNoteTable({ trades, clientName, accountNumber }: Contrac
       {/* Contract Note Table */}
       <div className="bg-white rounded-lg border-2 border-dashed border-primary overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
+          <table
+            className="w-full border-collapse"
+            style={{ borderCollapse: 'collapse', border: '2px solid #000' }}
+          >
             <thead>
               <tr className="bg-gray-300">
-                <th className="border-2 border-black px-4 py-2 text-left font-bold text-sm text-gray-900">
+                <th className="border-2 border-black px-4 py-2 text-left font-bold text-sm text-gray-900" style={{ border: '2px solid #000' }}>
                   TYPE
                 </th>
-                <th className="border-2 border-black px-4 py-2 text-right font-bold text-sm text-gray-900">
+                <th className="border-2 border-black px-4 py-2 text-right font-bold text-sm text-gray-900" style={{ border: '2px solid #000' }}>
                   PRICE
                 </th>
-                <th className="border-2 border-black px-4 py-2 text-right font-bold text-sm text-gray-900">
+                <th className="border-2 border-black px-4 py-2 text-right font-bold text-sm text-gray-900" style={{ border: '2px solid #000' }}>
                   UNITS
                 </th>
-                <th className="border-2 border-black px-4 py-2 text-left font-bold text-sm text-gray-900">
+                <th className="border-2 border-black px-4 py-2 text-left font-bold text-sm text-gray-900" style={{ border: '2px solid #000' }}>
                   SECURITY
                 </th>
               </tr>
@@ -109,16 +112,16 @@ export function ContractNoteTable({ trades, clientName, accountNumber }: Contrac
             <tbody>
               {trades.map((trade, idx) => (
                 <tr key={idx} className="border-b border-gray-200 hover:bg-gray-50">
-                  <td className="border-2 border-black px-4 py-2 text-sm text-gray-900">
+                  <td className="border-2 border-black px-4 py-2 text-sm text-gray-900" style={{ border: '2px solid #000' }}>
                     {trade.type}
                   </td>
-                  <td className="border-2 border-black px-4 py-2 text-sm text-gray-900 text-right font-mono">
+                  <td className="border-2 border-black px-4 py-2 text-sm text-gray-900 text-right font-mono" style={{ border: '2px solid #000' }}>
                     {formatPrice(trade.price)}
                   </td>
-                  <td className="border-2 border-black px-4 py-2 text-sm text-gray-900 text-right font-mono">
+                  <td className="border-2 border-black px-4 py-2 text-sm text-gray-900 text-right font-mono" style={{ border: '2px solid #000' }}>
                     {formatUnits(trade.units)}
                   </td>
-                  <td className="border-2 border-black px-4 py-2 text-sm text-gray-900">
+                  <td className="border-2 border-black px-4 py-2 text-sm text-gray-900" style={{ border: '2px solid #000' }}>
                     {trade.security}
                   </td>
                 </tr>

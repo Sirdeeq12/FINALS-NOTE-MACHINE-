@@ -263,7 +263,7 @@ export function formatAsHTML(
   accountNumber: string,
   includeTitle: boolean = false
 ): string {
-  const border = 'border:2px solid #000 !important;';
+  const border = 'border:2px solid #000 !important;border-style:solid !important;border-color:#000 !important;';
   const cell = `${border}padding:4px 8px;`;
   const headCell = `${cell}font-weight:bold;background:#d9d9d9;text-align:center;`;
 
@@ -295,7 +295,7 @@ export function formatAsHTML(
 
   return (
     `${title}` +
-    `<table style="border-collapse:collapse;${border}font-family:Arial,sans-serif;font-size:13px;">` +
+    `<table border="2" cellpadding="0" cellspacing="0" style="border-collapse:collapse;${border}font-family:Arial,sans-serif;font-size:13px;">` +
     `<thead>${header}</thead>` +
     `<tbody>${body}</tbody>` +
     `</table>`
