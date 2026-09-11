@@ -92,16 +92,16 @@ export function ContractNoteTable({ trades, clientName, accountNumber }: Contrac
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-gray-300">
-                <th className="border border-gray-400 px-4 py-2 text-left font-bold text-sm text-gray-900">
+                <th className="border-2 border-black px-4 py-2 text-left font-bold text-sm text-gray-900">
                   TYPE
                 </th>
-                <th className="border border-gray-400 px-4 py-2 text-right font-bold text-sm text-gray-900">
+                <th className="border-2 border-black px-4 py-2 text-right font-bold text-sm text-gray-900">
                   PRICE
                 </th>
-                <th className="border border-gray-400 px-4 py-2 text-right font-bold text-sm text-gray-900">
+                <th className="border-2 border-black px-4 py-2 text-right font-bold text-sm text-gray-900">
                   UNITS
                 </th>
-                <th className="border border-gray-400 px-4 py-2 text-left font-bold text-sm text-gray-900">
+                <th className="border-2 border-black px-4 py-2 text-left font-bold text-sm text-gray-900">
                   SECURITY
                 </th>
               </tr>
@@ -109,7 +109,7 @@ export function ContractNoteTable({ trades, clientName, accountNumber }: Contrac
             <tbody>
               {trades.map((trade, idx) => (
                 <tr key={idx} className="border-b border-gray-200 hover:bg-gray-50">
-                  <td className="border border-gray-300 px-4 py-2 text-sm text-gray-900">
+                  <td className="border-2 border-black px-4 py-2 text-sm text-gray-900">
                     {trade.type}
                   </td>
                   <td className="border border-gray-300 px-4 py-2 text-sm text-gray-900 text-right font-mono">
@@ -118,7 +118,7 @@ export function ContractNoteTable({ trades, clientName, accountNumber }: Contrac
                   <td className="border border-gray-300 px-4 py-2 text-sm text-gray-900 text-right font-mono">
                     {formatUnits(trade.units)}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2 text-sm text-gray-900">
+                  <td className="border-2 border-black px-4 py-2 text-sm text-gray-900">
                     {trade.security}
                   </td>
                 </tr>

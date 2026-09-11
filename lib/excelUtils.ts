@@ -263,7 +263,7 @@ export function formatAsHTML(
   accountNumber: string,
   includeTitle: boolean = false
 ): string {
-  const border = 'border:1px solid #000;';
+  const border = 'border:2px solid #000 !important;';
   const cell = `${border}padding:4px 8px;`;
   const headCell = `${cell}font-weight:bold;background:#d9d9d9;text-align:center;`;
 
